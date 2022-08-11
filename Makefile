@@ -21,8 +21,8 @@ export GOPROXY=https://goproxy.cn,direct
 frontend:
 	rm -rf static/dist
 	make -C frontend build
-	cp -r frontend/dist static
-	@test ! -f docs/ckman_documentation.pdf || cp docs/ckman_documentation.pdf static/dist/ckman_documentation.pdf
+	cp -r frontend/dist static/
+	cp -r static/docs static/dist/
 
 .PHONY: backend
 backend:
@@ -42,8 +42,7 @@ pre:
 	go install github.com/swaggo/swag/cmd/swag@v1.7.1
 
 .PHONY: build
-build:pre
-	@test -d static/dist || (git submodule update --init --recursive && make frontend)
+build:pre frontend
 	pkger
 	swag init
 	go build ${LDFLAGS}
